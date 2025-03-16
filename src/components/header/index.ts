@@ -1,3 +1,3 @@
-import MovieCard from "./movie-card";
+import Header from "./header";
 
-export default MovieCard;
+export default Header;

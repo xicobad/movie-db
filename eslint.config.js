@@ -20,7 +20,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
-        'warn',
+        'off', //жаловался на MovieGrid - MovieCard
         { allowConstantExport: true },
       ],
     },

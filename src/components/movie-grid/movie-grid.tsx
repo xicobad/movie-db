@@ -1,9 +1,8 @@
-import React, { Component } from "react";
-import { Row, Col, ConfigProvider } from "antd";
+import React from "react";
 import MovieCard from "../movie-card";
-import MovieServices from "../../services/movie-services";
-import Spinner from "../spinner";
-import ErrorIndicator from "../error-indicator";
+import { Row, Col, ConfigProvider, Flex } from "antd";
+
+
 
 const customTheme = {
   token: {
@@ -14,49 +13,26 @@ const customTheme = {
   },
 };
 
-export default class MovieGrid extends Component {
-  movieServices = new MovieServices();
-
-  state = {
-    movies: [],
-    loading: true,
-    error: false,
-  };
-
-  componentDidMount() {
-    this.movieServices
-      .getResource()
-      .then((movies) => {
-        this.setState({ movies: movies.slice(0, 14), loading: false });
-      })
-      .catch(this.onError);
-  }
-
-  onError = () => {
-    this.setState({
-      error: true,
-      loading: false,
-    });
-  };
-
-  render() {
-    const { movies, loading, error } = this.state;
-
-    const hasData = !loading || error;
-
-    const errorMessage = error ? <ErrorIndicator /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = hasData ? <MovieView movies={movies} /> : null;
-
-    return (
-      <React.Fragment>
-        {errorMessage}
-        {spinner}
-        {content}
-      </React.Fragment>
-    );
-  }
+interface Movie {
+  id: number;
+  title: string;
+  overview: string;
+  image: string;
 }
+
+interface MovieGridProps {
+  movies: Movie[];
+}
+
+const MovieGrid: React.FC<MovieGridProps> = ({ movies }) => {
+  return (
+    <div>
+      <MovieView movies={movies} />
+    </div>
+  );
+};
+
+export default MovieGrid;
 
 interface MoviesViewProps {
   movies: Movie[];
@@ -75,7 +51,8 @@ const MovieView: React.FC<MoviesViewProps> = ({ movies }) => {
   return (
     <React.Fragment>
       <ConfigProvider theme={customTheme}>
-        <Row gutter={[24, 24]} justify="center">
+        <Flex justify="left">
+        <Row gutter={[24, 24]} justify="start">
           {movies.map((movie) => (
             <Col key={movie.id} xs={24} sm={18} md={14} lg={12} xl={10} xxl={7}>
               <MovieCard
@@ -88,6 +65,7 @@ const MovieView: React.FC<MoviesViewProps> = ({ movies }) => {
             </Col>
           ))}
         </Row>
+        </Flex>
       </ConfigProvider>
     </React.Fragment>
   );
