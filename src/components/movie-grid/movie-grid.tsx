@@ -8,7 +8,8 @@ const customTheme = {
   token: {
     screenMD: 990,
     screenLG: 1199,
-    screenXL: 1450,
+    screenXL: 1445,
+    screenXXL: 1600,
   },
 };
 
@@ -53,7 +54,7 @@ const MovieView: React.FC<MoviesViewProps> = ({ movies }) => {
         <Flex justify="left">
         <Row gutter={[24, 24]} justify="start">
           {movies.map((movie) => (
-            <Col key={movie.id} xs={24} sm={18} md={14} lg={12} xl={8}>
+            <Col key={movie.id} xs={24} sm={18} md={14} lg={12} xl={12} xxl={8}>
               <MovieCard
                 title={movie.title}
                 date={movie.release_date}
