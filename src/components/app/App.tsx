@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MovieServices from "../../services/movie-services";
 import MovieGrid from "../movie-grid";
-import { Layout } from "antd";
+import { Layout, Pagination } from "antd";
 import SearchPanel from "../search-panel";
 import ErrorIndicator from "../error-indicator";
 import Spinner from "../spinner";
@@ -15,6 +15,7 @@ const App = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); 
 
   const clearMovies = () => {
     setMovies([])
@@ -22,7 +23,8 @@ const App = () => {
 
   useEffect(() => {
     loadTrendingMovies();
-  }, [])
+    loadMovies(currentPage)
+  }, [currentPage])
 
   const loadTrendingMovies = async () => {
     setLoading(true);
@@ -59,12 +61,39 @@ const App = () => {
   setLoading(false);
 };
 
+const loadMovies = async (page: number) => {
+  setLoading(true);
+  setError(false);
+
+  try {
+    const { movies } = await movieServices.getMovies(page);
+    setMovies(movies);
+  } catch (error) {
+    setError(Boolean(error));
+  }
+
+  setLoading(false);
+};
+
+const handlePageChange = (page: number) => {
+  setCurrentPage(page);
+};
+
   return (
     <Layout style={{ padding: "20px", background: "#f0f2f5" }}>
       <Content>
         {loading ? null : <SearchPanel onSearch={fetchMovies} />}
         {error && <ErrorIndicator />}
         {loading ? <Spinner /> : <MovieGrid movies={movies} />}
+        {loading ? null : 
+        <Pagination 
+        style={{ marginTop:20 }} 
+        size="small" 
+        total={50} 
+        align="center"
+        current={currentPage}
+        onChange={handlePageChange}
+        />}
       </Content>
     </Layout>
   );

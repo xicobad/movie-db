@@ -1,4 +1,6 @@
 export default class MovieServices {
+  URL = "https://api.themoviedb.org/3";
+
   options = {
     method: "GET",
     headers: {
@@ -10,7 +12,7 @@ export default class MovieServices {
 
   async getResource() {
 const res = await fetch(
-      "https://api.themoviedb.org/3/trending/movie/day?language=en-US",
+      `${this.URL}/trending/movie/day?language=en-US`,
       this.options
     );
 
@@ -28,7 +30,7 @@ const res = await fetch(
     query = query.charAt(0).toUpperCase() + query.slice(1)
      
     const res = await fetch(
-      `https://api.themoviedb.org/3/search/movie?query=${query}&language=en-US`,
+      `${this.URL}/search/movie?query=${query}&language=en-US`,
       this.options
     );
 
@@ -39,4 +41,21 @@ const res = await fetch(
     const body = await res.json();
     return body.results;
   }
+
+  async getMovies(page: number = 1) {
+    const res = await fetch(
+      `${this.URL}/trending/movie/day?language=en-US&page=${page}`,
+      this.options
+    );
+
+    if (!res.ok) {
+      throw new Error("Ошибка запроса: " + res.status);
+    }
+
+    const body = await res.json();
+    return { movies: body.results};
+  }
 }
+
+const movieServices = new MovieServices();
+console.log(movieServices.getMovies(2).then((body) => console.log(body)));
