@@ -6,7 +6,7 @@ export default class MovieServices {
     headers: {
       accept: "application/json",
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTQ1YTFmYThiNWVjNWE0OGNhYTUwYzY1Y2E5MmQ2MyIsIm5iZiI6MTc0MTYxNTg2NS40NTEsInN1YiI6IjY3Y2VmMmY5ZmYxYTg0MGI5OTExMjFiYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.h5XsNw_1-joZ-jFG4wuMLAkqnXatIVeWbWUAWUy-qec",
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4YmM5NGNmMTAwOWI1MTM0ZmNmMjhiMjc1ZjIxMzdmNCIsIm5iZiI6MTc0MTYxNTg2NS40NTEsInN1YiI6IjY3Y2VmMmY5ZmYxYTg0MGI5OTExMjFiYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.3jNntEa0woKPFLHdW2nRF2TgWs0fZSg5FSH6zXH2UL0",
     },
   }
 
@@ -42,20 +42,47 @@ const res = await fetch(
     return body.results;
   }
 
+  
   async getMovies(page: number = 1) {
     const res = await fetch(
       `${this.URL}/trending/movie/day?language=en-US&page=${page}`,
       this.options
     );
+    
+    if (!res.ok) {
+      throw new Error("Ошибка запроса: " + res.status);
+    }
+    
+    const body = await res.json();
+    return { movies: body.results};
+  }
 
+  genreMap: Record<number,string> = {};
+  
+  async getGenres() {
+    const res = await fetch(
+      `${this.URL}/genre/movie/list?language=en`,
+      this.options
+    );
+    
     if (!res.ok) {
       throw new Error("Ошибка запроса: " + res.status);
     }
 
     const body = await res.json();
-    return { movies: body.results};
+    this.genreMap = body.genres.reduce((acc:Record<number,string>, genre: Genre) => {
+      acc[genre.id] = genre.name
+      return acc
+    }, {} as Record<number,string>)
+
+    return this.genreMap
   }
 }
 
-const movieServices = new MovieServices();
-console.log(movieServices.getMovies(2).then((body) => console.log(body)));
+interface Genre {
+  id: number;
+  name: string;
+}
+
+// const movieServices = new MovieServices();
+

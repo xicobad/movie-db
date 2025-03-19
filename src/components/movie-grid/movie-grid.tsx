@@ -13,29 +13,10 @@ const customTheme = {
   },
 };
 
-interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  image: string;
-}
 
-interface MovieGridProps {
+interface MovieProps {
   movies: Movie[];
-}
-
-const MovieGrid: React.FC<MovieGridProps> = ({ movies }) => {
-  return (
-    <div>
-      <MovieView movies={movies} />
-    </div>
-  );
-};
-
-export default MovieGrid;
-
-interface MoviesViewProps {
-  movies: Movie[];
+  genres: Record<number,string>
 }
 
 interface Movie {
@@ -44,10 +25,18 @@ interface Movie {
   release_date: string;
   overview: string;
   poster_path: string;
-  genre_ids: string[];
+  genre_ids: number[];
 }
 
-const MovieView: React.FC<MoviesViewProps> = ({ movies }) => {
+const MovieGrid: React.FC<MovieProps> = ({ movies, genres }) => {
+  return (
+    <div>
+      <MovieView movies={movies} genres={genres}/>
+    </div>
+  );
+};
+
+const MovieView: React.FC<MovieProps> = ({ movies, genres }) => {
   return (
     <React.Fragment>
       <ConfigProvider theme={customTheme}>
@@ -60,7 +49,7 @@ const MovieView: React.FC<MoviesViewProps> = ({ movies }) => {
                 date={movie.release_date}
                 overview={movie.overview}
                 image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                genres={movie.genre_ids}
+                genres={movie.genre_ids.map((id) => genres[id as number])}
               />
             </Col>
           ))}
@@ -70,3 +59,5 @@ const MovieView: React.FC<MoviesViewProps> = ({ movies }) => {
     </React.Fragment>
   );
 };
+
+export default MovieGrid;

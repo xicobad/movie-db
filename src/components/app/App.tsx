@@ -16,6 +16,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); 
+  const [genres, setGenres] = useState<Record<number,string>>({})
 
   const clearMovies = () => {
     setMovies([])
@@ -24,6 +25,11 @@ const App = () => {
   useEffect(() => {
     loadTrendingMovies();
     loadMovies(currentPage)
+    const fetchGenres = async () => {
+      const loadGenres = await movieServices.getGenres();
+      setGenres(loadGenres);
+    };
+    fetchGenres()
   }, [currentPage])
 
   const loadTrendingMovies = async () => {
@@ -84,7 +90,7 @@ const handlePageChange = (page: number) => {
       <Content>
         {loading ? null : <SearchPanel onSearch={fetchMovies} />}
         {error && <ErrorIndicator />}
-        {loading ? <Spinner /> : <MovieGrid movies={movies} />}
+        {loading ? <Spinner /> : <MovieGrid movies={movies} genres={genres} />}
         {loading ? null : 
         <Pagination 
         style={{ marginTop:20 }} 
