@@ -148,11 +148,3 @@ interface Genre {
   id: number;
   name: string;
 }
-
-const movieServices = new MovieServices();
-
-movieServices.getMovies().then((data) => console.log(data));
-
-console.log(movieServices.createGuestSessions());
-
-console.log(movieServices.rateMovie(447273, 3));

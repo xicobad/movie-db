@@ -55,9 +55,13 @@ const App = () => {
 
     try {
       const movies = await movieServices.getRatedMovies(guestSession);
+        if(movies.length === 0) {
+          console.log("Нет оцененных фильмов")
+          return;
+        }
       setRatedMovies(movies);
     } catch (error) {
-      console.error("Не обновили " + error);
+      console.error("Не поставили нигде звезду " + error);
     }
   };
 
@@ -137,6 +141,7 @@ const App = () => {
             guestSession={guestSession}
             isRated={activeTab === "rated"}
             loadRatedMovies={loadRatedMovies}
+            activeTab={activeTab}
           />
         )}
         {loading

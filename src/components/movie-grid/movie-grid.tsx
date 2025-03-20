@@ -20,6 +20,7 @@ interface MovieProps {
   guestSession: string | null;
   isRated: boolean;
   loadRatedMovies: () => void;
+  activeTab: string;
 }
 
 interface Movie {
@@ -47,7 +48,8 @@ const MovieView: React.FC<MovieProps> = ({
   genres,
   guestSession,
   isRated,
-  loadRatedMovies
+  loadRatedMovies,
+  activeTab
 }) => {
   const onRate = async (movieId: number, rating: number) => {
     if (!guestSession) return;
@@ -88,6 +90,7 @@ const MovieView: React.FC<MovieProps> = ({
                   userRating={movie.userRating}
                   loadRatedMovies={loadRatedMovies}
                   onRate={(rating) => onRate(movie.id, rating)}
+                  activeTab={activeTab}
                 />
               </Col>
             ))}

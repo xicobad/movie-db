@@ -21,6 +21,7 @@ interface MovieCardProps {
   userRating: number;
   onRate: (movieId: number, rating: number) => void;
   loadRatedMovies: () => void;
+  activeTab:string;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({
@@ -35,6 +36,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
   rating,
   userRating,
   loadRatedMovies,
+  activeTab,
 }) => {
   const rate = async (rating: number) => {
     if (!guestSession) {
@@ -43,7 +45,9 @@ const MovieCard: React.FC<MovieCardProps> = ({
     }
     try {
       await movieServices.rateMovie(movieId, rating);
-      loadRatedMovies();
+      if (activeTab === "rated") {
+        loadRatedMovies();
+      }
     } catch (error) {
       console.error("Ошибка " + error);
     }
