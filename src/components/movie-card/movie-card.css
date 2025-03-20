@@ -1,0 +1,14 @@
+.rating {
+   position: "absolute"; 
+   top: "10px";
+   right: "10px";
+   color: "#000";
+   font-weight: "bold";
+   border-radius: "50%";
+   width: "35px";
+   height: "35px";
+   display: "flex";
+   justify-content: "center";
+   align-items: "center";
+   font-size: "14px";
+}
