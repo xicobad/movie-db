@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MovieServices from "../../services/movie-services";
 import MovieGrid from "../movie-grid";
 import { Layout, Pagination } from "antd";
@@ -44,13 +44,7 @@ const App = () => {
     createGuestSessions();
   }, [currentPage]);
 
-  useEffect(() => {
-    if (activeTab === "rated" && guestSession) {
-      loadRatedMovies();
-    }
-  }, [activeTab, guestSession]);
-
-  const loadRatedMovies = async () => {
+  const loadRatedMovies = useCallback(async () => {
     if (!guestSession) return;
 
     try {
@@ -63,7 +57,15 @@ const App = () => {
     } catch (error) {
       console.error("Не поставили нигде звезду " + error);
     }
-  };
+  }, [guestSession]);
+
+  useEffect(() => {
+    if (activeTab === "rated" && guestSession) {
+      loadRatedMovies();
+    }
+  }, [activeTab, guestSession, loadRatedMovies]);
+
+
 
   const tabChange = (key: string) => {
     setActiveTab(key);
